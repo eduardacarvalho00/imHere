@@ -1,17 +1,37 @@
-import { StatusBar } from 'expo-status-bar';
-import {  Button, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useState } from 'react';
+import {  Alert, Button, FlatList, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Participant } from '../../components/Participant';
 import { styles } from './styles';
 
 export function Home() {
+  const [participants, setParticipants] = useState<string[]>([]);
+  const [participantName, setParticipantName] = useState('');
+  
+
   function handleParticipantAdd(){
-    console.log('click');
-    
-  }
+    if(participants.includes(participantName)){
+     return Alert.alert('Participante existe', 'Já existe um participante com esse nome')
+    };
+    setParticipants(prevState => [...prevState, participantName])
+    setParticipantName('')
+  };
+
+  function handleParticipantRemove(name : string){
+    Alert.alert('Remover', `Remover o participante ${name}?`, [
+      {
+        text: 'Sim',
+        onPress: () =>  setParticipants(prevState => prevState.filter(participant => participant !== name))
+      },
+      {
+        text: 'Não',
+        style: 'cancel'
+      }
+    ])
+  };
+
   return (
     <View style={styles.container}>
-      <StatusBar style="inverted" />
-
+     
       <Text style={styles.title}>Nome do evento</Text>
       <Text style={styles.textData}>25 de janeiro de 2023</Text>
      
@@ -19,6 +39,8 @@ export function Home() {
         <TextInput 
           style={styles.input}
           placeholder='Nome do participante'
+          onChangeText={setParticipantName}
+          value={participantName}
         />
 
         <TouchableOpacity style={styles.button} onPress={handleParticipantAdd}> 
@@ -28,8 +50,20 @@ export function Home() {
         </TouchableOpacity>
       </View>
 
-      <Participant name='duda'/>
-      <Participant name='leonardo'/>
+      <FlatList 
+        data={participants}
+        keyExtractor={item => item}
+        renderItem={({item}) => (
+          <Participant key={item} name={item} onRemove={() => handleParticipantRemove(item)}/>
+        )}
+        ListEmptyComponent={() => (
+          <Text style={styles.listEmpty}>
+            Ninguém chegou no evento ainda? Adicione participantes a sua lista de presença.
+          </Text>
+        )}
+      />
+
+
     </View>
   );
 }

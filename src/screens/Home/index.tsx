@@ -28,12 +28,15 @@ export function Home() {
       }
     ])
   };
+  const date = new Date()
+  console.log(date.toLocaleDateString())
+  const dateFormat = date.toLocaleDateString()
 
   return (
     <View style={styles.container}>
      
       <Text style={styles.title}>Nome do evento</Text>
-      <Text style={styles.textData}>25 de janeiro de 2023</Text>
+      <Text style={styles.textData}>{dateFormat}</Text>
      
       <View style={styles.form}>
         <TextInput 

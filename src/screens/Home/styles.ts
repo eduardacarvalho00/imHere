@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
     color: '#5DD46B',
   },
   textData: {
-    color: '#E3EDF5',
+    color: '#8C99A2',
     fontSize: 18,
   },
   input: {
